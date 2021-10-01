@@ -1,16 +1,19 @@
-# This is a sample Python script.
+from flask_migrate import Migrate
+from app.commands import db_config, db
+from app import create_app
+from config import config_options
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+app = create_app('development')
+app.config.from_object(config_options['development'])
+
+db_config(app)
+migrate = Migrate(app, db)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+8 to toggle the breakpoint.
+@app.cli.command("db")
+def db():
+    """command to migrate"""
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    app.run()
